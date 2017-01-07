@@ -73,6 +73,10 @@ let config = {
  }
 };
 
+if (isProd) {
+  config.plugins.push(new webpack.optimize.UglifyJsPlugin());
+}
+
 if (isTest) {
   let newConfig = _.pick(config, 'context', 'resolve');
 

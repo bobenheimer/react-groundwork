@@ -1,4 +1,4 @@
-// Note: If you modify this file you must restart webpack to see your changes
+// Note: If you modify this file you must restart the run script to see your changes
 const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
@@ -10,13 +10,36 @@ const htmlTemplate = require('../src/html_template');
 const NODE_ENV = process.env.NODE_ENV;
 const isDev = (NODE_ENV === 'development');
 const isProd = (NODE_ENV === 'production');
-const useServer = isDev || appConfig.useServerInProd; // Always use in dev, use based off of config in production
 
-const startServerOnce = _.once(function () {
+// Dev - Restart server on changes
+const startServerDev = _.once(function () {
+  const nodemon = require('nodemon');
+  nodemon({
+    script: 'src/server/index.js',
+    watch: ['src/server', 'src/html_template.js'],
+    ext: 'js json'
+  });
+
+  nodemon.on('start', function () {
+    console.log('Server has started');
+  }).on('quit', function () {
+    console.log('Server has quit');
+  }).on('restart', function (files) {
+    console.log('Server restarted due to: ', files);
+  });
+});
+
+// Prod - Start server once
+const startServerProd = _.once(function () {
   require('../src/server');
 });
 
-// todo minify
+// Prod with no node backend - Write index.html to file
+const writeIndexHtml = function () {
+  fs.writeFileSync(path.resolve(__dirname, '../dist/index.html'), htmlTemplate());
+  console.log('index.html has been written');
+};
+
 const webpackCb = function (err, stats) {
   if (err) {
     console.assert(null, err);
@@ -30,11 +53,12 @@ const webpackCb = function (err, stats) {
     modules: false
   }));
 
-  if (useServer) {
-    startServerOnce(); // todo - restart on changes
+  if (isDev) {
+    startServerDev();
+  } else if (appConfig.useServerInProd) {
+    startServerProd();
   } else {
-    // todo bluebird?
-    fs.writeFile(path.resolve(__dirname, '../dist/index.html'), htmlTemplate());
+    writeIndexHtml();
   }
 };
 
