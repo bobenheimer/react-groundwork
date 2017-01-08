@@ -22,10 +22,10 @@ const startServerDev = _.once(function () {
 
   nodemon.on('start', function () {
     console.log('Server has started');
-  }).on('quit', function () {
-    console.log('Server has quit');
   }).on('restart', function (files) {
     console.log('Server restarted due to: ', files);
+  }).on('quit', function () {
+    process.exit(0); // Some weirdness seems to happen without this (at least on linux)
   });
 });
 
@@ -42,6 +42,7 @@ const writeIndexHtml = function () {
 
 const webpackCb = function (err, stats) {
   if (err) {
+    console.log('----ERROR BUNDLING WEBPACK----');
     console.assert(null, err);
     return;
   }
