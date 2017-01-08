@@ -22,7 +22,7 @@ yarn install
 The project config is located at `src/config.js`.
 ```
 module.exports = {
-  // Whether to use node in production (as opposed to having nginx serve your files).
+  // Whether to use node in production (as opposed to having something like nginx serve your files).
   // If this is false, npm start will spit out an index.html file in /dist
   useServerInProd: true,
   port: 3030,
