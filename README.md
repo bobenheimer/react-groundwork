@@ -9,7 +9,7 @@ To get started, simply fork this project.
 
 ### Installing
 
-Install with npm or[yarn.](https://github.com/yarnpkg/yarn)All examples will be using yarn.
+Install with npm or [yarn.](https://github.com/yarnpkg/yarn) All examples will be using yarn.
 
 ```
 yarn install
@@ -19,7 +19,7 @@ yarn install
 
 ### Config file
 
-The project config is located at `src/config.js`
+The project config is located at `src/config.js`.
 ```
 module.exports = {
   // Whether to use node in production (as opposed to having nginx serve your files).
@@ -30,7 +30,7 @@ module.exports = {
 };
 ```
 
-### Working inside the project
+### Working on the project
 
 To start the project in development mode:
 
@@ -43,11 +43,11 @@ This will rebuild the static files on changes and restart the server on server c
 ### Building for prod
 
 ```
-npm start
+yarn start
 ```
 
 This will bundle assets with minification, and depending on config.useServerInProd, will either start a node server
-or spit out `/dist/index.html`
+or spit out `/dist/index.html`.
 
 
 ## Running the tests
@@ -60,4 +60,4 @@ yarn test
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
