@@ -13,7 +13,10 @@ const isProd = (NODE_ENV === 'production');
 
 // Common stuff used in both regular config and test only
 const definePlugin = new webpack.DefinePlugin({
-  'process.env': { NODE_ENV: JSON.stringify(NODE_ENV) }
+  'process.env': {
+    NODE_ENV: JSON.stringify(NODE_ENV),
+    IS_BROWSER: true
+  }
 });
 
 let config = {
@@ -22,59 +25,92 @@ let config = {
     app: ['./init_app.js'],
     vendor: ['babel-polyfill', 'react', 'react-dom']
   },
-  resolve: {
-    modulesDirectories: ['src', 'src/components', 'node_modules'],
-    extensions: ['', '.js', '.jsx']
-  },
   output: {
     publicPath: appConfig.publicPath,
     path: path.join(__dirname, 'dist'),
-    filename: '[name].[chunkhash].js'
+    filename: isProd ? '[name].[chunkhash].js' : '[name].js',
+    pathinfo: !isProd
+  },
+  resolve: {
+    modules: [
+      path.resolve(__dirname, 'src'),
+      path.resolve(__dirname, 'src/client'),
+      'node_modules'
+    ],
+    extensions: ['.js', '.jsx']
   },
   plugins: [
     definePlugin,
     new ManifestPlugin(),
     new CleanWebpackPlugin(['dist/**/*']),
-    new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.[chunkhash].js'),
-    new ExtractTextPlugin('[name].[chunkhash].css')
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      filename: isProd ? 'vendor.[chunkhash].js' : 'vendor.js'
+    }),
+    new ExtractTextPlugin({
+      filename: isProd ? '[name].[contenthash].css' : '[name].css',
+      disable: isDev
+    })
   ],
   // An eval sourcemap is the fastest for rebuilding, but will not emit nice sass sourcemaps,
   // so change "eval" to "inline-source-map" for nice scss sourcemaps
   devtool: isProd ? 'source-map' : 'eval',
   module: {
-    loaders: [
+    rules: [
       {
         include: [path.resolve(__dirname, 'src')],
         test: /\.jsx?$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         query: {
           cacheDirectory: path.resolve('./.tmp'),
           retainLines: true,
-          presets: ['es2015', 'react', 'stage-0']
-       }
-      },
-      {
-        test: /\.css$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap')
+          presets: ['env', 'stage-0', 'react']
+        }
       },
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap', 'sass-loader?sourceMap')
+        loader: ExtractTextPlugin.extract({
+          use: [
+            {
+              loader: 'css-loader',
+              query: { sourceMap: true }
+            },
+            {
+              loader: 'sass-loader',
+              query: { sourceMap: true }
+            }
+          ],
+          fallback: 'style-loader' // Use style-loader in development
+        }),
       },
       {
-       test: /\.(png|jpg|gif|svg|ttf|eot|woff2?)$/,
-       loaders: ['file?name=[name].[hash].[ext]']
+        test: /\.css/,
+        loader: ExtractTextPlugin.extract({
+          use: [
+            {
+              loader: 'css-loader',
+              query: { sourceMap: true }
+            }
+          ],
+          fallback: 'style-loader' // Use style-loader in development
+        }),
       },
       {
-        test: /\.json$/,
-        loader: 'json-loader'
+        test: /\.(png|jpg|gif|svg|ttf|eot|woff|woff2?)$/,
+        loader: 'file-loader',
+        options: {
+          name: isProd ? '[name].[hash].[ext]' : '[path][name].[ext]'
+        }
       }
    ]
  }
 };
 
 if (isProd) {
-  config.plugins.push(new webpack.optimize.UglifyJsPlugin());
+  config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+    sourceMap: true,
+    warnings: true
+  }));
 }
 
 if (isTest) {
@@ -82,31 +118,29 @@ if (isTest) {
 
   Object.assign(newConfig, {
     devtool: 'inline-source-map',
+    plugins: [
+      definePlugin
+    ],
     module: {
-      plugins: [
-        definePlugin
-      ],
-      loaders: [
-        _.find(config.module.loaders, { loader: 'babel' }),
+      rules: [
+        _.find(config.module.rules, { loader: 'babel-loader' }),
         // Ignore asset filetypes to speed up bundling
         {
-          test: /\.(less|scss|css|png|jpg|gif|svg|ttf|eot|woff2)$/,
-          loader: 'null'
+          test: /\.(less|scss|css|png|jpg|gif|svg|ttf|eot|woff|woff2)$/,
+          loader: 'null-loader'
         },
-        _.find(config.module.loaders, { loader: 'json-loader' })
-      ],
-      postLoaders: [
         {
+          enforce: 'post',
           test: /\.jsx?$/,
           include: path.resolve(__dirname, 'src'),
           exclude: /\.test\.jsx?$/,
-          loader: 'istanbul-instrumenter'
+          loader: 'istanbul-instrumenter-loader'
         }
       ]
     }
   });
 
- config = newConfig;
+  config = newConfig;
 }
 
 module.exports = config;
