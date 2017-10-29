@@ -1,9 +1,10 @@
+process.env.CHROME_BIN = require('puppeteer').executablePath();
 const webpackConfig = require('./webpack.config');
 
 module.exports = function (config) {
   config.set({
     singleRun: true,
-    browsers: ['PhantomJS'],
+    browsers: ['ChromeHeadless'],
     frameworks: ['jasmine'],
 
     files: [
