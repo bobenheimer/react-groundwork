@@ -1,31 +1,31 @@
 const webpackConfig = require('./webpack.config');
 
 module.exports = function (config) {
- config.set({
-   singleRun: true,
-   browsers: ['PhantomJS'],
-   frameworks: ['jasmine'],
+  config.set({
+    singleRun: true,
+    browsers: ['PhantomJS'],
+    frameworks: ['jasmine'],
 
-   files: [
-     'test/setup_unit.js' // This file will load all of our tests
-   ],
+    files: [
+      'test/setup_unit.js' // This file will load all of our tests
+    ],
 
-   preprocessors: {
+    preprocessors: {
      'test/setup_unit.js': ['webpack', 'sourcemap']
-   },
+    },
 
-   reporters: ['progress', 'nyan', 'coverage'],
+    reporters: ['progress', 'nyan', 'coverage'],
 
-   coverageReporter: {
-     reporters: [
-       { type: "text-summary" }
-     ]
-   },
+    coverageReporter: {
+      reporters: [
+        { type: "text-summary" }
+      ]
+    },
 
-   webpack: webpackConfig,
+    webpack: webpackConfig,
 
-   webpackMiddleware: {
-     stats: 'errors-only'
-   }
- })
+    webpackMiddleware: {
+      stats: 'errors-only'
+    }
+  })
 };
