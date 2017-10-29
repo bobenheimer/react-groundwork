@@ -1,0 +1,48 @@
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeOutModal {
+  from {
+    opacity: 1;
+  }
+}
+
+.modal-container {
+  top: 0; right: 0; bottom: 0; left: 0;
+  position: fixed;
+  z-index: 1000;
+  background: rgba(#000, 0.4);
+  opacity: 0;
+
+  &.active {
+    animation-duration: .3s;
+    animation-name: fadeInModal;
+    opacity: 1;
+  }
+
+  &.transitioning-out {
+    animation-duration: .3s;
+    animation-name: fadeOutModal;
+    opacity: 0;
+  }
+
+  .modal-wrapper {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+
+    .modal-content {
+      background: #fff;
+    }
+
+    .modal-overlay {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      z-index: 1001;
+    }
+  }
+}
