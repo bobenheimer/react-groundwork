@@ -1,11 +1,15 @@
 const path = require('path');
 const express = require('express');
+const helmet = require('helmet');
 const compression = require('compression');
 const htmlTemplate = require('../html_template');
 const appConfig = require('../config');
 
 const app = express();
 const baseRouter = express.Router();
+
+// Important security plugin!
+app.use(helmet());
 
 // Gzip
 app.use(compression());

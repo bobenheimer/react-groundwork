@@ -17,6 +17,7 @@
     "classnames": "^2.2.5",
     "compression": "^1.7.1",
     "express": "^4.16.2",
+    "helmet": "^3.9.0",
     "lodash": "^4.17.4",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
