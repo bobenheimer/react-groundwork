@@ -5,7 +5,7 @@ module.exports = function (config) {
   config.set({
     singleRun: true,
     browsers: ['ChromeHeadless'],
-    frameworks: ['jasmine'],
+    frameworks: ['mocha'],
 
     files: [
       'test/setup_unit.js' // This file will load all of our tests
