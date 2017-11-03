@@ -61,7 +61,7 @@ let config = {
         include: [path.resolve(__dirname, 'src')],
         test: /\.jsx?$/,
         loader: 'babel-loader',
-        query: {
+        options: {
           cacheDirectory: path.resolve('./.tmp'),
           retainLines: true,
           presets: ['env', 'stage-0', 'react']
@@ -73,11 +73,11 @@ let config = {
           use: [
             {
               loader: 'css-loader',
-              query: { sourceMap: true }
+              options: { sourceMap: true }
             },
             {
               loader: 'sass-loader',
-              query: { sourceMap: true }
+              options: { sourceMap: true }
             }
           ],
           fallback: 'style-loader' // Use style-loader in development
@@ -89,7 +89,7 @@ let config = {
           use: [
             {
               loader: 'css-loader',
-              query: { sourceMap: true }
+              options: { sourceMap: true }
             }
           ],
           fallback: 'style-loader' // Use style-loader in development
@@ -115,6 +115,8 @@ if (isProd) {
 
 if (isTest) {
   let newConfig = _.pick(config, 'context', 'resolve');
+  let babelLoader = _.find(config.module.rules, { loader: 'babel-loader' });
+  babelLoader.options.plugins = [require('babel-plugin-rewire')];
 
   Object.assign(newConfig, {
     devtool: 'inline-source-map',
@@ -123,7 +125,7 @@ if (isTest) {
     ],
     module: {
       rules: [
-        _.find(config.module.rules, { loader: 'babel-loader' }),
+        babelLoader,
         // Ignore asset filetypes to speed up bundling
         {
           test: /\.(less|scss|css|png|jpg|gif|svg|ttf|eot|woff|woff2)$/,
@@ -132,8 +134,13 @@ if (isTest) {
         {
           enforce: 'post',
           test: /\.jsx?$/,
-          include: path.resolve(__dirname, 'src'),
-          exclude: /\.test\.jsx?$/,
+          include: [
+            path.resolve(__dirname, 'src')
+          ],
+          exclude: [
+            path.resolve(__dirname, 'src/server'),
+            /\.test\.jsx?$/
+          ],
           loader: 'istanbul-instrumenter-loader'
         }
       ]

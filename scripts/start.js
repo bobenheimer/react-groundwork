@@ -5,7 +5,7 @@ const _ = require('lodash');
 const webpack = require('webpack');
 const webpackConfig = require('../webpack.config.js');
 const appConfig = require('../src/config');
-const htmlTemplate = require('../src/html_template');
+const htmlTemplate = require('../src/server/html_template');
 
 const NODE_ENV = process.env.NODE_ENV;
 const isDev = (NODE_ENV === 'development');
@@ -16,7 +16,7 @@ const startServerDev = _.once(function () {
   const nodemon = require('nodemon');
   nodemon({
     script: 'src/server/index.js',
-    watch: ['src/server', 'src/html_template.js'],
+    watch: ['src/server'],
     ext: 'js json'
   });
 

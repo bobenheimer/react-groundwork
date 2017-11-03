@@ -1,3 +1,4 @@
+// Client unit test config
 process.env.CHROME_BIN = require('puppeteer').executablePath();
 const webpackConfig = require('./webpack.config');
 
@@ -8,14 +9,14 @@ module.exports = function (config) {
     frameworks: ['mocha'],
 
     files: [
-      'test/setup_unit.js' // This file will load all of our tests
+      'test/setup_client.js' // This file will load all of our tests
     ],
 
     preprocessors: {
-     'test/setup_unit.js': ['webpack', 'sourcemap']
+     'test/setup_client.js': ['webpack', 'sourcemap']
     },
 
-    reporters: ['progress', 'nyan', 'coverage'],
+    reporters: ['mocha', 'coverage'],
 
     coverageReporter: {
       reporters: [

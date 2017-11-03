@@ -1,0 +1,11 @@
+{
+  "reporter": [
+    "text-summary"
+  ],
+  "include": [
+    "src/server/**/*.js"
+  ],
+  "exclude": [
+    "src/server/**/*.test.js"
+  ]
+}

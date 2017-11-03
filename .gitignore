@@ -1,6 +1,5 @@
 .tmp/
 .idea/
+.nyc_output/
 node_modules/
 dist/
-
-npm-debug.log
