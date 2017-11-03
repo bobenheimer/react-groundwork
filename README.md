@@ -1,7 +1,7 @@
 # react-groundwork
 A starting point for react applications. The goal of this project is to provide a very fast and simple basic
 structure to create single page react apps with unit testing already setup. It is slightly opinionated (sass, karma,
-jasmine), but makes no opinions about flux/mv* architecture or package management (npm/yarn).
+mocha, chai), but makes no opinions about flux/mv* architecture or package management (npm/yarn).
 
 ## Getting Started
 
