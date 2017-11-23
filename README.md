@@ -52,7 +52,7 @@ or spit out `/dist/index.html`.
 
 ## Running the tests
 
-Unit tests are setup with karma and jasmine, with the assumption that each test ends in `.test.js`.
+Unit tests are setup with mocha and [mocha-webpack](https://github.com/zinserjan/mocha-webpack), with the assumption that each test ends in `.test.js`.
 
 ```
 yarn test
