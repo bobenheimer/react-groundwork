@@ -122,8 +122,8 @@ if (isTest) {
   babelLoader.options.plugins = [require('babel-plugin-rewire')];
 
   Object.assign(newConfig, {
-    // target: 'node',
-    // externals: [nodeExternals()],
+    target: 'node',
+    externals: [nodeExternals()],
     plugins: [definePlugin],
     devtool: 'inline-source-map',
     module: {
