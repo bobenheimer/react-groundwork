@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {createPortal} from 'react-dom';
+import React, { Component } from 'react';
+import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import _ from 'lodash'
 import './modal.scss';
