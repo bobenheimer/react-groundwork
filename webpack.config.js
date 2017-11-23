@@ -4,12 +4,15 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const nodeExternals = require('webpack-node-externals');
 const appConfig = require('./src/config');
 
 const NODE_ENV = process.env.NODE_ENV;
 const isDev = (NODE_ENV === 'development');
 const isTest = (NODE_ENV === 'test');
 const isProd = (NODE_ENV === 'production');
+
+const shouldCover = !!process.env.COVERAGE;
 
 // Common stuff used in both regular config and test only
 const definePlugin = new webpack.DefinePlugin({
@@ -58,8 +61,8 @@ let config = {
   module: {
     rules: [
       {
-        include: [path.resolve(__dirname, 'src')],
         test: /\.jsx?$/,
+        include: [path.resolve(__dirname, 'src')],
         loader: 'babel-loader',
         options: {
           cacheDirectory: path.resolve('./.tmp'),
@@ -119,10 +122,10 @@ if (isTest) {
   babelLoader.options.plugins = [require('babel-plugin-rewire')];
 
   Object.assign(newConfig, {
+    // target: 'node',
+    // externals: [nodeExternals()],
+    plugins: [definePlugin],
     devtool: 'inline-source-map',
-    plugins: [
-      definePlugin
-    ],
     module: {
       rules: [
         babelLoader,
@@ -130,22 +133,20 @@ if (isTest) {
         {
           test: /\.(less|scss|css|png|jpg|gif|svg|ttf|eot|woff|woff2)$/,
           loader: 'null-loader'
-        },
-        {
-          enforce: 'post',
-          test: /\.jsx?$/,
-          include: [
-            path.resolve(__dirname, 'src')
-          ],
-          exclude: [
-            path.resolve(__dirname, 'src/server'),
-            /\.test\.jsx?$/
-          ],
-          loader: 'istanbul-instrumenter-loader'
         }
       ]
     }
   });
+
+  if (shouldCover) {
+    newConfig.module.rules.push({
+      enforce: 'post',
+      test: /\.jsx?$/,
+      include: [path.resolve(__dirname, 'src')],
+      exclude: [/\.test\.js$/],
+      loader: 'istanbul-instrumenter-loader'
+    })
+  }
 
   config = newConfig;
 }

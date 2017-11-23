@@ -3,9 +3,10 @@
     "text-summary"
   ],
   "include": [
-    "src/server/**/*.js"
+    "src/**/*.js",
+    "src/**/*.jsx"
   ],
   "exclude": [
-    "src/server/**/*.test.js"
+    "src/**/*.test.js"
   ]
 }
