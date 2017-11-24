@@ -5,7 +5,6 @@ const _ = require('lodash');
 const webpack = require('webpack');
 const webpackConfig = require('../webpack.config.js');
 const appConfig = require('../src/config');
-const htmlTemplate = require('../src/server/html_template');
 
 const NODE_ENV = process.env.NODE_ENV;
 const isDev = (NODE_ENV === 'development');
@@ -36,6 +35,7 @@ const startServerProd = _.once(function () {
 
 // Prod with no node backend - Write index.html to file
 const writeIndexHtml = function () {
+  const htmlTemplate = require('../src/server/html_template'); // require AFTER the manifest is written
   fs.writeFileSync(path.resolve(__dirname, '../dist/index.html'), htmlTemplate());
   console.log('index.html has been written');
 };
