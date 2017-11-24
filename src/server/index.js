@@ -26,7 +26,7 @@ baseRouter.get('*', function (req, res) {
 });
 
 // Use baseRouter prefixed with whatever the public path is
-app.use(appConfig.publicPath, baseRouter);
+app.use(appConfig.basePath, baseRouter);
 
 // Listen on port
 app.listen(appConfig.port);

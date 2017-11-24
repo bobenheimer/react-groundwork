@@ -2,5 +2,6 @@
 module.exports = {
   useServerInProd: true,
   port: 3030,
-  publicPath: '/'
+  publicPath: '/dist/',
+  basePath: '/'
 };

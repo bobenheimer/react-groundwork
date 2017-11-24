@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Modal from '../modal';
+import exampleImg from 'assets/example.png';
 import './app.scss';
 
 class App extends Component {
@@ -10,6 +11,7 @@ class App extends Component {
     return (
       <div className='main-app'>
         <div>hello, world</div>
+        <div><img src={exampleImg} /></div>
         <div>
           <button onClick={() => this.setState({ modalOpen: true })}>
             Open Modal

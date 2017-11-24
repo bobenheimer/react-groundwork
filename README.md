@@ -26,7 +26,8 @@ module.exports = {
   // If this is false, npm start will spit out an index.html file in /dist
   useServerInProd: true,
   port: 3030,
-  publicPath: '/' // e.g. the "/myapp" in www.mywebsite.com/myapp
+  publicPath: '/dist/',
+  basePath: '/' // e.g. the "/myapp" in www.mywebsite.com/myapp
 };
 ```
 
